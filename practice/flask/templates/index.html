@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Титулка</title>
+
+</head>
+<body>
+    <h1>Привіт! Я {{name}}</h1>
+    <p>Мені {{age}} років.</p>
+    <p>Моє хобі – {{hobby}}</p>
+    <p>Місце яке я хочу відвідати – {{place}}</p>
+
+    <ol>
+        {% for fruit in fruits %}
+            <li>{{ fruit }}</li>
+        {% endfor %}
+    </ol>
+
+    <input type="button" onclick="location.href='/about'" value="про мене">
+    <input type="button" onclick="location.href='/form'" value="форма">
+    <input type="button" onclick="location.href='/character'" value="персонаж">
+    <input type="button" onclick="location.href='/klas'" value="клас">
+</body>
+</html>

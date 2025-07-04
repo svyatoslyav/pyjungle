@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hi</title>
+</head>
+<body>
+ <p style="color:{{color}} ">привіт {{name}} якому {{age}} років</p>
+<p style="color:{{color}}">
+    {% if age >=60 %}
+        Ви пенсіонер
+    {% elif age >= 18 %}
+        Ви повнолітній
+    {% elif age >=0 %}
+        Ви неповнолітній
+    {% else %}
+        Ви ще не народились..?
+    {% endif %}
+</p>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма вводу віку</title>
+</head>
+<body>
+    <h1>Введіть свій вік</h1>
+    <form method="POST">
+        <label for="age">Вік:</label>
+        <input type="number" name="age" id="age" required>
+        <button type="submit">Відправити</button>
+        </form>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+
+</body>
+</html>
