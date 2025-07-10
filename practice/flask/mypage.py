@@ -93,5 +93,9 @@ def dzconv():
         result=round(conv_mass(val,from_u,to_u), 3)
     return render_template("dzconverter.html", result=result)
 
+@app.route("/secret")
+def secret():
+    return render_template("scripting.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
