@@ -9,6 +9,21 @@ conversion_factors = {
 'foot': {'cm': 30.48, 'm': 0.3048, 'km': 0.0003048, 'inch': 12}
 }
 
+mass_convertion={
+    "kg":1,
+    "g":0.001,
+    "c":100,
+    "t":1000,
+    "pd":0.45359237,
+    "sm":1.989*(10**30)
+}
+
+def conv_mass(value,from_unit,to_unit):
+    global mass_convertion
+    if from_unit==to_unit:
+        return value
+    return value * (mass_convertion.get(from_unit)/mass_convertion.get(to_unit))
+
 def convert_units(value, from_unit, to_unit):
     global conversion_factors
     if from_unit == to_unit:
@@ -67,6 +82,16 @@ def convert():
         to_v=request.form["to_unit"]
         result=convert_units(val, from_v, to_v)
     return render_template("/convert.html", result=result)
+
+@app.route("/dzconverter", methods=["GET", "POST"])
+def dzconv():
+    result=None
+    if request.method=="POST":
+        val = float(request.form["value"])
+        from_u = request.form["from_unit"]
+        to_u = request.form["to_unit"]
+        result=round(conv_mass(val,from_u,to_u), 3)
+    return render_template("dzconverter.html", result=result)
 
 if __name__ == "__main__":
     app.run(debug=True)

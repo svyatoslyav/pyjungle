@@ -1,10 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>mass converter</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
-<body>
-$END$
+<body class="convbody">
+    <div class="container">
+        <h2 class="convh2">Конвертер одиниць</h2>
+        <form method="post">
+            <input type="number" name="value" placeholder="Введи число" required step="any">
+
+            <select name="from_unit">
+                <option value="kg">Кілограми</option>
+                <option value="g">Грами</option>
+                <option value="c">Центнери</option>
+                <option value="t">Тонни</option>
+                <option value="pd">Фунт</option>
+                <option value="sm">Сонячна маса</option>
+            </select>
+            <select name="to_unit">
+                <option value="kg">Кілограми</option>
+                <option value="g">Грами</option>
+                <option value="c">Центнери</option>
+                <option value="t">Тонни</option>
+                <option value="pd">Фунт</option>
+                <option value="sm">Сонячна маса</option>
+            </select>
+
+            <button type="submit">Конвертувати</button>
+        </form>
+        {% if result is not none %}
+            <h3 class="convh3">Результат: {{ result }}</h3>
+        {% endif %}
+    </div>
 </body>
 </html>
