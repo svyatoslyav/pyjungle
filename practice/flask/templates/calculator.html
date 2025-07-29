@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>calculator</title>
+</head>
+<body>
+<form method="post">
+    <input type="text" NAME="inp">
+    <button type="submit">submit</button>
+</form>
+{% if lastres is not none %}
+    <h3 class="convh3">Результат: {{ lastres }}</h3>
+{% endif %}
+</body>
+</html>

@@ -1,5 +1,33 @@
-from flask import Flask, render_template, request
+from os import access
+
+from flask import Flask, render_template, request, session, render_template_string
+import requests
 fruits = ["Яблуко","Банан","Апельсин","Ківі","Виноград"]
+api = "https://bored-api.appbrewery.com/random"
+PHP_API_URL = "https://justconsole.tech/python/api.php?table=users"
+
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Паролі користувачів</title>
+
+</head>
+<body>
+
+<h1>Паролі користувачів</h1>
+{% for user in users %}
+
+<p><strong>ім'я користувача:</strong> {{ user.username }} | <strong>пароль:</strong> {{ user.password}}</p>
+{% endfor %}
+
+</body>
+</html>
+"""
+
 
 conversion_factors = {
 'cm': {'m': 0.01, 'km': 0.00001, 'inch': 0.393701, 'foot': 0.0328084},
@@ -31,6 +59,7 @@ def convert_units(value, from_unit, to_unit):
     return round(value * conversion_factors.get(from_unit, {}).get(to_unit, 1), 2)
 
 app = Flask(__name__)
+app.secret_key="secret_key"
 
 @app.route("/")
 def hello():
@@ -96,6 +125,84 @@ def dzconv():
 @app.route("/secret")
 def secret():
     return render_template("scripting.html")
+
+@app.route("/clicker")
+def clicker():
+    if "clicks" not in session:
+        session["clicks"] = 0
+    return render_template_string("""
+    <h1>Кількість кліків: {{ clicks }}</h1>
+    <a href="/clicker/click">Натисни!</a><br>
+    <a href="/clicker/minus">Мінус</a>
+    """, clicks=session["clicks"])
+
+
+@app.route("/clicker/click")
+def click():
+    session["clicks"] += 1
+    return clicker()
+
+@app.route("/clicker/minus")
+def minusclick():
+    session["clicks"] -= 1
+    return clicker()
+
+@app.route("/sessionclicker")
+def sessionclicker():
+    if "clicks" not in session:
+        session["clicks"] = 0
+    return render_template("sessionclicker.html", clicks=session["clicks"])
+
+@app.route("/add")
+def addclicker():
+    session["clicks"] += 1
+    return sessionclicker()
+
+@app.route("/calculator", methods=["GET", "POST"])
+def calculator():
+    lastres = None
+    if "lastres" not in session:
+        session["lastres"]=None
+    if request.method == "POST":
+        inp = request.form["inp"]
+        lastres = eval(inp)
+        session["lastres"] = lastres
+    return render_template("calculator.html", lastres = lastres)
+
+@app.route("/req", methods=["GET", "POST"]  )
+def req():
+    response = requests.get(api)
+    data = response.json()
+    task = data['activity']
+    return render_template("req.html", task=task)
+
+@app.route("/hack", methods=["GET", "POST"])
+def get_users():
+    try:
+        response = requests.get(PHP_API_URL)
+        users = response.json() #Отримуємо список користувачів
+        return render_template_string(HTML_TEMPLATE, users=users)
+    except requests.exceptions.RequestException as e:
+        return f"<p>Помилка при підключенні до сервера: {str(e)}</p>"
+
+@app.route("/auth", methods=["GET", "POST"])
+def auth():
+    response = requests.get(PHP_API_URL)
+    users = response.json()
+    access= None
+    if request.method == "POST":
+        login = request.form["login"]
+        password = request.form["password"]
+        for user in users:
+            if login in user.get("username"):
+                if password == user.get("password"):
+                    access = "approved"
+                    return render_template("auth.html", access = access)
+                else:
+                    access = "deny"
+            else:
+                access="deny"
+    return render_template("auth.html", access=access)
 
 if __name__ == "__main__":
     app.run(debug=True)
